@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Task List</h2>
+    <a href="{% url 'todo_create' %}">
+        <button>Create New Task</button>
+    </a>
+    
+    <ul class="todo-list">
+        {% for todo in todos %}
+            <li class="todo-item {% if todo.completed %}completed{% endif %}">
+                <span>{{ todo.title }}</span>
+                <div>
+                    <!-- Mark as completed checkbox -->
+                    <form method="POST" action="{% url 'todo_mark_completed' todo.id %}">
+                        {% csrf_token %}
+                        <input type="checkbox" 
+                               name="completed" 
+                               value="1" 
+                               {% if todo.completed %}checked{% endif %}
+                               onchange="this.form.submit()">
+                    </form>
+
+                    <a href="{% url 'todo_update' todo.id %}"><button>Edit</button></a>
+                    <a href="{% url 'todo_delete' todo.id %}"><button>Delete</button></a>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
